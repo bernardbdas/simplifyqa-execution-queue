@@ -87,8 +87,8 @@ export class App {
       },
       info: {
         description: 'Generated with `routing-controllers-openapi`',
-        title: 'A sample API',
-        version: '1.0.0',
+        title: 'API Documentation for SimplifyQA Execution Queue',
+        version: '0.0.1',
       },
     });
 

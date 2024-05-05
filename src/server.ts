@@ -1,6 +1,7 @@
 import { App } from '@/app';
 import { AuthController } from '@controllers/auth.controller';
 import { UserController } from '@controllers/users.controller';
+import {E} from '@controllers/queue.controller'
 import { ValidateEnv } from '@utils/validateEnv';
 
 ValidateEnv();

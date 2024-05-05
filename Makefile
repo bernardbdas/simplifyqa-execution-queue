@@ -4,7 +4,7 @@
 
 SHELL := /bin/bash
 
-APP_NAME = typescript-express
+APP_NAME = simplifyqa-execution-queue
 APP_NAME := $(APP_NAME)
 
 .PHONY: help start clean db test

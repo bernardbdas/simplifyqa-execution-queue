@@ -1,4 +1,5 @@
-export interface Execution {
-  id?: number;
-  client_id: string;
+export interface Payload {
+  id: string;
+  clientId: string;
+  metadata: any;
 }
