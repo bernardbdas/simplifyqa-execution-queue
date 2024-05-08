@@ -1,52 +1,38 @@
-import { hash } from 'bcrypt';
 import { Service } from 'typedi';
 // import { CreateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/httpException';
+import { ExecutionData } from '@/interfaces/execution.interface';
+import Redis from 'ioredis';
+import { REDIS_HOST, REDIS_PORT, REDIS_USER, REDIS_PASSW, REDIS_DB } from '@config';
 // import { User } from '@interfaces/users.interface';
 // import { ExecutionModel } from '@models/users.model';
 
 @Service()
 export class QueueService {
-  public async findAllUser(): Promise<Execution[]> {
-    const executions: Execution[] = ExecutionModel;
-    return execution;
+  public async enQueue(data: ExecutionData[]): Promise<ExecutionData[]> {
+    const redisClient = new Redis(`redis//${REDIS_USER}:${REDIS_PASSW}@${REDIS_HOST}:${REDIS_PORT}/${REDIS_DB}`);
+
+    // new Redis({
+    //   port: REDIS_PORT,
+    //   host: REDIS_HOST,
+    //   username: REDIS_USER,
+    //   password: REDIS_PASSW,
+    //   db: 0,
+    // });
+
+    for (var item of data) {
+      await redisClient.set(item.clientId, JSON.stringify(item), 'EX', 3600);
+    }
+
+    return data;
   }
 
-  public async findUserById(userId: number): Promise<User> {
-    const findUser: User = UserModel.find(user => user.id === userId);
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
-
-    return findUser;
-  }
-
-  public async createUser(userData: CreateUserDto): Promise<User> {
-    const findUser: User = UserModel.find(user => user.email === userData.email);
-    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
-
-    const hashedPassword = await hash(userData.password, 10);
-    const createUserData: User = { id: UserModel.length + 1, ...userData, password: hashedPassword };
-
-    return createUserData;
-  }
-
-  public async updateUser(userId: number, userData: CreateUserDto): Promise<User[]> {
-    const findUser: User = UserModel.find(user => user.id === userId);
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
-
-    const hashedPassword = await hash(userData.password, 10);
-    const updateUserData: User[] = UserModel.map((user: User) => {
-      if (user.id === findUser.id) user = { id: userId, ...userData, password: hashedPassword };
-      return user;
+  public async deQueue(clientId: string): Promise<ExecutionData> {
+    const redisClient = new Redis(`redis//${REDIS_USER}:${REDIS_PASSW}@${REDIS_HOST}:${REDIS_PORT}/${REDIS_DB}`);
+    return new Promise((res, err) => {
+      res: {
+        redisClient.get(clientId);
+      }
     });
-
-    return updateUserData;
-  }
-
-  public async deleteUser(userId: number): Promise<User[]> {
-    const findUser: User = UserModel.find(user => user.id === userId);
-    if (!findUser) throw new HttpException(409, "User doesn't exist");
-
-    const deleteUserData: User[] = UserModel.filter(user => user.id !== findUser.id);
-    return deleteUserData;
   }
 }

@@ -1,17 +1,14 @@
-import { IsEmail, IsString, IsNotEmpty, MinLength, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateExecutionDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(9)
-  @MaxLength(32)
-  public password: string;
-}
+  public id: string;
 
-export class UpdateExecutionDto {
   @IsString()
   @IsNotEmpty()
-  @MinLength(9)
-  @MaxLength(32)
-  public id: string;
+  public clientId: string;
+
+  @IsNotEmpty()
+  public metadata: any;
 }
